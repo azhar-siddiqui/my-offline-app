@@ -4,6 +4,7 @@ packages:
 allowBuilds:
   "@firebase/util": true
   electron: true
+  electron-winstaller: true
   esbuild: true
   protobufjs: true
 minimumReleaseAgeExclude:
@@ -18,3 +19,14 @@ minimumReleaseAgeExclude:
   - expo-modules-core@58.0.23
   - expo-modules-jsi@58.0.16
   - expo@58.0.16
+  - "@typescript-eslint/eslint-plugin@8.72.0"
+  - "@typescript-eslint/parser@8.72.0"
+  - "@typescript-eslint/project-service@8.72.0"
+  - "@typescript-eslint/scope-manager@8.72.0"
+  - "@typescript-eslint/tsconfig-utils@8.72.0"
+  - "@typescript-eslint/type-utils@8.72.0"
+  - "@typescript-eslint/types@8.72.0"
+  - "@typescript-eslint/typescript-estree@8.72.0"
+  - "@typescript-eslint/utils@8.72.0"
+  - "@typescript-eslint/visitor-keys@8.72.0"
+  - electron@44.9.1
