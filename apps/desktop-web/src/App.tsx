@@ -1,11 +1,11 @@
 import { useActionState, useEffect, useState } from "react";
 import { TodoItem, TodoService } from "shared-db";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
 
 export default function App() {
-  // 1. React 19 Pattern: Initialize state as null to represent the initial synchronization state.
   const [todos, setTodos] = useState<TodoItem[] | null>(null);
 
-  // Still listening to the live offline/online Firestore snapshot queue
   useEffect(() => {
     const unsubscribe = TodoService.subscribeToTodos((data) => {
       setTodos(Array.isArray(data) ? data : data ? [data] : []);
@@ -13,8 +13,6 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // 2. React 19 Action Definition: Native form action implementation.
-  // The action automatically receives form data, managing offline write transitions seamlessly.
   const [error, submitAction, isPending] = useActionState(
     async (_previousState: any, formData: FormData) => {
       const taskTitle = formData.get("taskTitle") as string;
@@ -22,9 +20,9 @@ export default function App() {
 
       try {
         await TodoService.create(taskTitle.trim());
-        return null; // Success state
+        return null;
       } catch (err) {
-        console.error("Failed to commit task offline: ", err);
+        console.error("Database error: ", err);
         return "Failed to save task.";
       }
     },
@@ -32,106 +30,67 @@ export default function App() {
   );
 
   return (
-    <div
-      style={{
-        maxWidth: "600px",
-        margin: "40px auto",
-        padding: "24px",
-        fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
-      }}
-    >
-      <h1>Desktop Task Manager (React 19.3.0 Client)</h1>
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-slate-50 border border-slate-200 rounded-xl shadow-sm font-sans">
+      <h1 className="text-2xl font-bold text-slate-900 mb-6 tracking-tight">
+        Desktop Task Manager
+      </h1>
 
-      {/* 3. React 19 Action Form: Uses native form actions instead of manual handlers */}
-      <form
-        action={submitAction}
-        style={{ display: "flex", gap: "8px", marginBottom: "24px" }}
-      >
-        <input
+      <form action={submitAction} className="flex gap-2 mb-6">
+        <Input
           name="taskTitle"
           type="text"
           placeholder="What needs to be done? (Works offline)"
           disabled={isPending}
-          style={{
-            flexGrow: 1,
-            padding: "12px",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-          }}
         />
-        <button
-          type="submit"
-          disabled={isPending}
-          style={{
-            padding: "12px 24px",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
+        {/* Rendered shadcn button styled beautifully via Tailwind */}
+        <Button type="submit" disabled={isPending} variant="default">
           {isPending ? "Adding..." : "Add Task"}
-        </button>
+        </Button>
       </form>
 
-      {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+      {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
 
-      <div>
-        {/* 4. Strict State Branching: Resolves the microsecond micro-flash UI bug */}
+      <div className="space-y-2">
         {todos === null ? (
-          <p style={{ color: "#888", fontStyle: "italic" }}>
+          <p className="text-slate-400 text-sm italic text-center py-4">
             Synchronizing local cache...
           </p>
         ) : todos.length === 0 ? (
-          <p>No tasks found. Add your first item above!</p>
+          <p className="text-slate-500 text-sm text-center py-4">
+            No tasks found. Add your first item above!
+          </p>
         ) : (
           todos.map((todo) => (
             <div
               key={todo.id}
-              style={{
-                display: "flex",
-                padding: "16px",
-                borderBottom: "1px solid #eee",
-                alignItems: "center",
-                backgroundColor: "#fff",
-              }}
+              className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg shadow-2xs transition-all hover:border-slate-300"
             >
               <span
-                style={{
-                  textDecoration: todo.completed ? "line-through" : "none",
-                  color: todo.completed ? "#aaa" : "#333",
-                  flexGrow: 1,
-                  fontSize: "16px",
-                }}
+                className={`text-sm font-medium ${
+                  todo.completed
+                    ? "line-through text-slate-400"
+                    : "text-slate-700"
+                }`}
               >
                 {todo.title}
               </span>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button
+              <div className="flex gap-2">
+                <Button
                   onClick={() =>
                     TodoService.toggleComplete(todo.id!, todo.completed)
                   }
-                  style={{
-                    padding: "6px 12px",
-                    borderRadius: "4px",
-                    border: "1px solid #ccc",
-                    cursor: "pointer",
-                  }}
+                  variant="outline"
+                  size="sm"
                 >
                   {todo.completed ? "Undo" : "Complete"}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => TodoService.delete(todo.id!)}
-                  style={{
-                    padding: "6px 12px",
-                    borderRadius: "4px",
-                    border: "none",
-                    backgroundColor: "#ffebee",
-                    color: "#c62828",
-                    cursor: "pointer",
-                  }}
+                  variant="destructive"
+                  size="sm"
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           ))
