@@ -11,14 +11,26 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+const getEnv = (key: string): string => {
+  // 1. Look for Expo variables on the global object safely
+  if (typeof globalThis !== "undefined" && (globalThis as any).process?.env) {
+    return (globalThis as any).process.env[`${key}`] || "";
+  }
+  // 2. Look for Vite variables on the meta object safely
+  if (typeof import.meta !== "undefined" && (import.meta as any).env) {
+    return (import.meta as any).env[`${key}`] || "";
+  }
+  return "";
+};
+
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
-  measurementId: "",
+  apiKey: getEnv("VITE_FIREBASE_API_KEY"),
+  authDomain: getEnv("VITE_FIREBASE_AUTH_DOMAIN"),
+  projectId: getEnv("VITE_FIREBASE_PROJECT_ID"),
+  storageBucket: getEnv("VITE_FIREBASE_STORAGE_BUCKET"),
+  messagingSenderId: getEnv("VITE_FIREBASE_MESSAGING_SENDER_ID"),
+  appId: getEnv("VITE_FIREBASE_APP_ID"),
+  measurementId: getEnv("VITE_FIREBASE_MEASURMENT_ID"),
 };
 
 const app = initializeApp(firebaseConfig);
