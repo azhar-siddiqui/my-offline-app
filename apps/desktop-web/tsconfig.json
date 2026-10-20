@@ -12,6 +12,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+
+    /* CRUCIAL FIX FOR REACT 19 + TS 7 */
     "jsx": "react-jsx",
 
     /* Linting */
