@@ -23,7 +23,6 @@
     "noFallthroughCasesInSwitch": true,
 
     /* ShadCn Config */
-
     "paths": {
       "@/*": ["./src/*"]
     }
