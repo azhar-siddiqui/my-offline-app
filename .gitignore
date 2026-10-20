@@ -1,0 +1,23 @@
+# Node dependencies (including pnpm's virtual store)
+node_modules
+.pnpm-store
+
+# Expo & Metro files
+.expo/
+dist/
+web-build/
+
+# Native build folders (if any)
+android/
+ios/
+
+# Environment secrets
+.env
+.env*.local
+
+# Debug logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
