@@ -15,9 +15,7 @@ export default function App() {
 
         <section className="mt-8" aria-label="Task list">
           <ProgressBar />
-
           <TabBar />
-
           <TaskFooter />
         </section>
       </main>
