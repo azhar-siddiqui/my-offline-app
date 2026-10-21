@@ -21,8 +21,8 @@ import { InputGroup, InputGroupInput } from "../ui/input-group";
 const formSchema = z.object({
   title: z
     .string()
-    .min(5, "Bug title must be at least 5 characters.")
-    .max(32, "Bug title must be at most 32 characters."),
+    .min(5, "title must be at least 5 characters.")
+    .max(32, "title must be at most 32 characters."),
 });
 
 const TITLE_LIMIT = 280;
