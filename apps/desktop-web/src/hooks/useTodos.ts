@@ -45,6 +45,22 @@ export function useTodos() {
     });
   }
 
+  async function editTask(todo: TodoItem, title: string) {
+    if (!todo.id) return;
+    const next = title.trim();
+    if (!next || next === todo.title.trim()) return;
+
+    setBusyId(todo.id);
+    try {
+      await TodoService.updateTitle(todo.id, next);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   // Remove a task using React 19 Transitions
   function removeTask(todo: TodoItem) {
     if (!todo.id) return;
@@ -99,6 +115,7 @@ export function useTodos() {
 
     // Async Handlers
     toggleTask,
+    editTask,
     removeTask,
     clearCompleted,
   };

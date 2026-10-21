@@ -78,6 +78,12 @@ export const TodoService = {
     await updateDoc(doc(db, "todos", id), { completed: !currentStatus });
   },
 
+  async updateTitle(id: string, title: string): Promise<void> {
+    const next = title.trim();
+    if (!next) return;
+    await updateDoc(doc(db, "todos", id), { title: next });
+  },
+
   // DELETE
   async delete(id: string): Promise<void> {
     await deleteDoc(doc(db, "todos", id));
